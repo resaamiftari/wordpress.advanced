@@ -28,7 +28,7 @@ function ds_theme_assets(){
         get_template_directory_uri().'/js/custom.js',
         array('jquery'),
         '1.0',
-        'all'
+        true
     );
 
     if(is_singular()&& comments_opne()&& get_option('threadz_comments')){

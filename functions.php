@@ -15,7 +15,7 @@ function ds_theme_assets(){
 
     wp_enqueue_style(
         'slider-style',
-        get_template_directory_uri().'/css/slider.css'
+        get_template_directory_uri().'/css/slider.css',
         array(),
         '1.0',
         'all'
@@ -37,5 +37,17 @@ function ds_theme_assets(){
 }
 
 add_action('wp_enqueue_scripts','ds_theme_assets');
+
+function ds_setup(){
+    //kem me leju me pas meny
+    add_theme_support('menus');
+
+    //register primary menu
+    register_nav_menu('primary',"Primary menu");
+}
+
+add_action('init','ds_setup');
+
+
 
 ?>

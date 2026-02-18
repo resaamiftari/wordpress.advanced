@@ -31,3 +31,27 @@ footer{
     padding: 20px;
     text-align: center;
 }
+
+nav{
+    background-color:aquamarine;
+    padding: 15px 30px;
+}
+
+nav ul{
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li{
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    v
+}

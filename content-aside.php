@@ -1,6 +1,3 @@
-<article <? post_class(); ?>>
-
-    <? the_content(); ?>
-
+<article <?php post_class(); ?>>
+  <?php the_content(); ?>
 </article>
-

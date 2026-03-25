@@ -26,6 +26,40 @@ header {
     text-align: center;
 }
 
+.movie-genre-selector-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.movie-genre-selector-label {
+    margin: 0;
+    color: #f5f5f5;
+    font-weight: 600;
+}
+
+.movie-genre-selector {
+    min-width: 220px;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background: #fff;
+    color: #111;
+    padding: 8px 10px;
+}
+
+.movie-genre-selector:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 1px;
+}
+
+@media (max-width: 768px) {
+    .movie-genre-selector-wrapper {
+        justify-content: center;
+    }
+}
+
 main {
     padding: 40px;
 }

@@ -59,7 +59,7 @@ function ds_theme_setup() {
 }
 add_action('after_setup_theme', 'ds_theme_setup');
 
-;
+
 
 function ds_add_bootstrap_cdn() {
 
@@ -143,41 +143,114 @@ add_action('pre_get_posts', 'my_limit_posts_on_index');
 
 
 
-function our_custom_movie(){
-    $labels = array(
-        'name'                => _x('Movies', 'post type general name'),
-        'singular_name'       => _x('Movies', 'post type singular name'),
-        'add_new'             => _x('Add New', 'post type singular name'),
-        'add_new_item'        => __('Add New Movie'),
-        'edit_item'           => __('Edit  Movie'),
-        'new_item'            => __('New  Movie'),
-        'all_items'           => __('All  Movies'),
-        'view_item'           => __('View  Movies'),
-        'search_items'        => __('Search  Movies'),
-        'not_found'           => __('No movies found'),
-        'not_found_in_trash'  => __('No movies found in the Trash'),
-        'parent_item_colon'   => '',
-        'menu_name'           =>'Movies'
-    );
 
+function our_custom_movie() {
+    $labels = array(
+        'name'               => _x( 'Movies', 'post type general name' ),
+        'singular_name'      => _x( 'Movie', 'post type singular name' ),
+        'add_new'            => _x( 'Add New', 'movie' ),
+        'add_new_item'       => __( 'Add New Movie' ),
+        'edit_item'          => __( 'Edit Movie' ),
+        'new_item'           => __( 'New Movie' ),
+        'all_items'          => __( 'All Movies' ),
+        'view_item'          => __( 'View Movie' ),
+        'search_items'       => __( 'Search Movies' ),
+        'not_found'          => __( 'No movies found' ),
+        'not_found_in_trash' => __( 'No movies found in the Trash' ),
+        'parent_item_colon'  => '',
+        'menu_name'          => 'Movies'
+    );
 
     $args = array(
-        'labels'              => $labels,
-        'description'         =>'Movies and single movie details',
-        'public'              =>true,
-        'publicly_queryable'  =>true,
-        'menu_postion'        =>5,
-        'supports'            =>array('title','editor','thumbnail','excerpt','comments'),
-        'has_archive'         =>true,
-        'rewrite'             =>array('slug' =>'movies'),
-        'show_in_rest'        => true
+        'labels'             => $labels,
+        'description'        => 'Movies and single movie details',
+        'public'             => true,
+        'publicly_queryable' => true,
+        'menu_position'      => 5,
+        'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments' ),
+        'has_archive'        => true,
+        'rewrite'            => array( 'slug' => 'movies' ),
+        'show_in_rest'       => true
     );
 
+    register_post_type( 'movies', $args );
+}
 
-    register_post_type('movies',$args);
+add_action( 'init', 'our_custom_movie' );
 
+function register_taxonomy_movie_genres(){
+    $labels = array (
+        'name'               => _x('Movie genres', 'taxonomy general name'),
+        'singular_name'      => _x( 'Movie', 'taxonomy singular name' ),
+        'search_items'       => __('Search Movie genre'),
+        'all_items'          => __('all Movie genre'),
+        'parent_item'        => __('Parent Movie genre'),
+        'parent_item_colon'  => __('Parent Movie genre:'),
+        'edit_item'          => __('Edit Movie genre'),
+        'update_item'        =>__('Edit Movie genre'),
+        'add_new_item'       =>__('Add New Movie genre'),
+        'new_item_name'      =>__('New Movie genre Name'),
+        'menu_name'          =>__('Movie genre')
+    );
+
+    $args = array(
+        'hierarchical'       =>true,
+        'labels'             =>$labels,
+        'show_ui'            =>true,
+        'show_admin_column'  =>true,
+        'query_var'          =>true,
+        'show_in_rest'       =>true,
+        'rewrite'            =>array('slug'=>'movie_genre')
+    );
+
+    register_taxonomy('movie_genres',array('movies'),$args);
+
+    register_taxonomy('movietags','movies',array(
+        'label'             => 'Movie tags',
+        'rewrite'           =>array('slug' =>'movie_tags'),
+        'hierarchical'      =>false,
+        'show_ui'           =>true,
+        'show_admin_column' =>true,
+        'show_in_rest'      =>true
+    ));
 
 }
-add_action('init','our_custom_movie')
+add_action('init','register_taxonomy_movie_genres');
+
+
+function ds_seed_fast_and_furious_movie() {
+    $existing_movie = get_page_by_title( 'Fast and Furious', OBJECT, 'movies' );
+
+    if ( ! $existing_movie ) {
+        $movie_id = wp_insert_post(
+            array(
+                'post_title'   => 'Fast and Furious',
+                'post_content' => 'Street racing, heists, and a crew that turns into family.',
+                'post_status'  => 'publish',
+                'post_type'    => 'movies'
+            )
+        );
+    } else {
+        $movie_id = $existing_movie->ID;
+    }
+
+    if ( is_wp_error( $movie_id ) || ! $movie_id ) {
+        return;
+    }
+
+    $action_term = term_exists( 'action', 'movie_genres' );
+    if ( ! $action_term ) {
+        $action_term = wp_insert_term( 'Action', 'movie_genres', array( 'slug' => 'action' ) );
+    }
+
+    if ( ! is_wp_error( $action_term ) ) {
+        $term_id = is_array( $action_term ) ? $action_term['term_id'] : $action_term;
+        wp_set_object_terms( $movie_id, array( (int) $term_id ), 'movie_genres', false );
+    }
+}
+add_action( 'init', 'ds_seed_fast_and_furious_movie', 30 );
+
+
+
 
 ?>

@@ -54,5 +54,38 @@
 
         </div>
 
+        <div class="row mt-3">
+            <div class="col-12">
+                <?php
+                $movie_genres = array(
+                    'action' => 'Action',
+                    'horror' => 'Horror',
+                    'comedy' => 'Comedy'
+                );
+                ?>
+
+                <div class="movie-genre-selector-wrapper">
+                    <label for="movie-genre-selector" class="movie-genre-selector-label">Browse Movies by Genre:</label>
+                    <select
+                        id="movie-genre-selector"
+                        class="movie-genre-selector"
+                        aria-label="Select movie genre"
+                        onchange="if(this.value){window.location.href=this.value;}"
+                    >
+                        <option value="">Select genre</option>
+                        <?php foreach ( $movie_genres as $slug => $label ) : ?>
+                            <?php
+                            $term = get_term_by( 'slug', $slug, 'movie_genres' );
+                            $genre_link = ( $term && ! is_wp_error( $term ) )
+                                ? get_term_link( $term )
+                                : home_url( '/movie_genre/' . $slug );
+                            ?>
+                            <option value="<?php echo esc_url( $genre_link ); ?>"><?php echo esc_html( $label ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+
     </div>
 </header>

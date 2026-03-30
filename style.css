@@ -169,3 +169,13 @@ article:last-child{
 p{
     line-height: 1.6;
 }
+
+.movies-page {
+    max-width: 800px;
+    margin: auto;
+}
+
+.movie {
+    border-bottom: 1px solid #ccc;
+    padding: 15px 0;
+}
